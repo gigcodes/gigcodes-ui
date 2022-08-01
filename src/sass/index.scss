@@ -1,0 +1,61 @@
+@tailwind base;
+
+$bg: rgba(238, 242, 246, 0.5);
+$screen-xs-max: 767px;
+$color_dark_blue: #2d393c;
+$color_border: #e0e0e0;
+$color_pin: #979797;
+$color_gray_dark: #32325d;
+$color_gray_light: hsl(200, 10%, 60%);
+$color_gray_input: #f6f9fc;
+$color_gray_page: #E5E5E5;
+$color_gray_upload: #979797;
+$color_gray_upload_alt: #919191;
+$color_green: #479967;
+$color_search_alt: #DCDCD1;
+$color_red: #E75650;
+$color_yellow: #fbfab0;
+
+$brand-primary: #3aa3e3;
+$brand-secondary: #48606f;
+$brand-darker: #3C4858;
+
+$border: $color_border;
+$color_gray_lighter: $color_gray_input;
+
+$asset_bg: #394045;
+
+.little-heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 15px 0 0 20px;
+  text-transform: uppercase
+}
+
+@import 'additional-styles/utility-patterns.scss';
+@import 'additional-styles/range-slider.scss';
+@import 'additional-styles/toggle-switch.scss';
+@import 'additional-styles/flatpickr.scss';
+@import 'additional-styles/theme.scss';
+@import 'additional-styles/animation.scss';
+@import 'additional-styles/entypo.scss';
+@import 'additional-styles/tables.scss';
+@import 'additional-styles/breadcums.scss';
+@import 'additional-styles/luminous.scss';
+
+@import "page-tree";
+@import "faltpicker";
+@import "assets-fieldtype.scss";
+@import "dossier";
+@import "additional-styles/dropdown-menu";
+
+
+.asset-tile .asset-thumb img, .card, .cp-head .global-search, .daterange .dr-selections .dr-calendar, .mini-chart, .section-builder .section-layout, .section-builder .tabs-outer, .tabs, .z-depth-1 {
+  -webkit-box-shadow: 0 0 0 0.5px rgb(49 49 93 / 3%), 0 2px 5px 0 rgb(49 49 93 / 10%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+  box-shadow: 0 0 0 0.5px rgb(49 49 93 / 3%), 0 2px 5px 0 rgb(49 49 93 / 10%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+}
+
+
+@tailwind components;
+@tailwind utilities;

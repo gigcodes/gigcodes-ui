@@ -1,0 +1,49 @@
+.form-group {
+  padding: 24px;
+  @apply m-0;
+}
+
+:focus,
+button:focus,
+.btn:focus,
+.btn-sm:focus,
+.form-input:focus,
+.form-textarea:focus,
+.form-multiselect:focus,
+.form-select:focus,
+.form-checkbox:focus,
+.form-radio:focus {
+
+}
+
+.form-input,
+.form-textarea,
+.form-multiselect,
+.form-select,
+.form-checkbox,
+.form-radio {
+
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 20px 0;
+
+  .icon {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  &.loading-basic {
+    text-align: left;
+    padding: 0;
+
+    .icon {
+      display: inline-block;
+      margin: -2px 5px 0 0;
+    }
+  }
+}

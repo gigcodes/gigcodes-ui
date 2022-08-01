@@ -1,0 +1,82 @@
+$bg: rgba(238, 242, 246, 0.5);
+@import "he-tree-vue/dist/he-tree-vue.css";
+.page-tree {
+    .he-tree {
+        .tree-node {
+            margin-bottom: 1px;
+            padding: 0;
+            border: none;
+        }
+
+        .tree-node {
+            position: relative;
+            font-size: 13px;
+            --bg-opacity: 1;
+            background-color: #fff;
+            background-color: rgba(255, 255, 255, var(--bg-opacity));
+            box-shadow: 0 0 0 1px rgb(49 49 93 / 5%),
+                0 2px 5px 0 rgb(49 49 93 / 8%), 0 1px 3px 0 rgb(49 49 93 / 15%);
+            border-radius: 3px;
+
+            &:hover {
+                @apply bg-gray-100;
+            }
+        }
+
+        .tree-placeholder-node {
+            border: 1px dashed #0088f8;
+            background: rgba(0, 136, 249, 0.09);
+            height: 35px;
+
+            * {
+                display: none;
+            }
+        }
+
+        .page-move {
+            @apply w-6 border-r;
+            cursor: grab;
+            background: rgba($bg, 0.5) url("/images/drag-dots.svg") center
+                center no-repeat;
+
+            &:hover {
+                @apply bg-gray-200;
+            }
+        }
+
+        .page-root {
+            background: rgba($bg, 0.5);
+            @apply flex w-6 rounded-l items-center border-r;
+        }
+    }
+}
+
+.bg-green-light {
+    --bg-opacity: 1 !important;
+    background-color: rgba(100, 189, 99, var(--bg-opacity)) !important;
+}
+
+.bg-grey-60 {
+    --bg-opacity: 1 !important;
+    background-color: rgba(
+        167.02499999999998,
+        178.5,
+        189.975,
+        var(--bg-opacity)
+    ) !important;
+}
+
+.border-grey-60 {
+    --border-opacity: 1 !important;
+    border-color: rgba(
+        167.02499999999998,
+        178.5,
+        189.975,
+        var(--border-opacity)
+    ) !important;
+}
+
+.bg-yellow-dark {
+    --bg-opacity: 1 !important;
+    background-color: rgba(216, 205, 27, var(--bg-opacity)) !important;
+}
