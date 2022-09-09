@@ -1,5 +1,5 @@
 <template>
-  <div :class="classes">
+  <div>
     <div>
       <div class="flex items-center justify-between">
         <label class="block text-sm font-medium" :for="id"

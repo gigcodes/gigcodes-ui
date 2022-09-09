@@ -36,7 +36,6 @@ import TextField from "./components/fieldtypes/TextFieldtype.vue";
 import TextAreaField from "./components/fieldtypes/TextAreaFieldtype.vue";
 import SelectField from "./components/fieldtypes/SelectFieldtype.vue";
 import ToggleField from "./components/fieldtypes/ToggleFieldtype.vue";
-import DateField from "./components/fieldtypes/DateFieldtype.vue";
 import AssetsField from "./components/fieldtypes/assets/AssetsFieldtype.vue";
 
 
@@ -74,7 +73,6 @@ const components = {
     TextAreaField,
     SelectField,
     ToggleField,
-    DateField,
     DossierSearch,
     PublishButton,
     LoadingGraphic,
@@ -113,7 +111,6 @@ export {
     TextAreaField,
     SelectField,
     ToggleField,
-    DateField,
     MediaSelector,
     Toaster,
     createToaster,

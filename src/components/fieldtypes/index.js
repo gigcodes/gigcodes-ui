@@ -16,10 +16,6 @@ export default {
             type: String,
             default: "text",
         },
-        classes: {
-            type: String,
-            default: null,
-        },
         inputClass: {
             type: String,
             default: null,

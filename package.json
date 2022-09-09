@@ -1,6 +1,6 @@
 {
   "name": "gigcodes-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vue and Tailwind CSS UI library built with reusability in mind from gigcodes.",
   "main": "./dist/gigcodes-admin.umd.js",
   "module": "./dist/gigcodes-admin.es.js",

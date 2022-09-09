@@ -3,23 +3,24 @@
     Hello world!
   </h1>
   <text-field name="hello" tooltip="hi" has-error="e" class="w-1/6"></text-field>
-<assets-field
- v-model:data="items"
-    :config="{container:'main',max_files:5,canEdit:true}"
-     name="Images"></assets-field>
-   <dossier-table
-       v-model:loading="loading"
-        v-model:columns="columns"
-        v-model:tableOptions="tableOptions"
-        v-model:searching="searching"
-        v-model:hasItems="hasItems"
-        title="Categories"
-        :search-term="searchTerm"
-        collection="category"
-   />
+  <assets-field
+      v-model:data="items"
+      :config="{container:'main',max_files:5,canEdit:true}"
+      name="Images"></assets-field>
+  <dossier-table
+      v-model:loading="loading"
+      v-model:columns="columns"
+      v-model:tableOptions="tableOptions"
+      v-model:searching="searching"
+      v-model:hasItems="hasItems"
+      title="Categories"
+      :search-term="searchTerm"
+      collection="category"
+  />
 
-<!--  <editor></editor> -->
-  <MediaSelector container="main" :open="showMedia" @selected="selected" @closed="showMedia = false" can-edit></MediaSelector>
+  <!--  <editor></editor> -->
+  <MediaSelector container="main" :open="showMedia" @selected="selected" @closed="showMedia = false"
+                 can-edit></MediaSelector>
   <btn @click="showMedia = true">Open Media Selector</btn>
 </template>
 
@@ -43,7 +44,7 @@ export default {
     const columns = ref([]);
     const showMedia = ref(false);
     const tableOptions = ref({
-      sort: 'title',
+      sort: 'id',
       sortOrder: 'asc',
       checkboxes: true,
       partials: {
@@ -56,7 +57,7 @@ export default {
     }
 
     const uploadService = (data, config) => axios.post("http://127.0.0.1:8000/api/media/upload", data, config)
-    const getService = (params) => axios.get("http://127.0.0.1:8000/api/category", {params})
+    const getService = (params) => axios.get("http://127.0.0.1:8000/api/payments/get", {params})
     const getMediaService = (params) => axios.get("http://127.0.0.1:8000/api/media/get-file", {params})
     const containerService = () => axios.get(`http://127.0.0.1:8000/api/media/browse`)
     const loadFilesService = (params) => axios.get(`http://127.0.0.1:8000/api/media/get-files`, {params})
@@ -76,6 +77,8 @@ export default {
     provide("folderCreateService", folderCreateService)
     provide("folderUpdateService", folderUpdateService)
     provide("deleteFolderService", deleteFolderService)
+    provide("deleteMultiService", deleteFolderService)
+    provide("deleteService", deleteFilesService)
 
     return {
       items, loading, searching, searchTerm, hasItems, columns, tableOptions, showMedia, selected
