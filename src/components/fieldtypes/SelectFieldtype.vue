@@ -3,32 +3,32 @@
     <div>
       <div class="flex items-center justify-between">
         <label class="block text-sm font-medium" :for="id"
-        >{{ name }}
-          <span v-if="required" class="text-red-500">*</span></label
+          >{{ name }} <span v-if="required" class="text-red-500">*</span></label
         >
         <tooltip v-if="tooltip" class="ml-2" bg="dark" size="md">
           <div class="text-sm text-gray-200">{{ tooltip }}</div>
         </tooltip>
       </div>
       <select
-          :id="id"
-          class="form-select w-full"
-          :autofocus="autofocus"
-          :required="required"
-          :aria-readonly="readonly"
-          :disabled="disabled"
-          :class="className"
-          @change="updateSelf($event)"
-          @keyup="$emit('keyup', $event)"
-          @blur="handleBlur"
+        :id="id"
+        class="form-select w-full"
+        :autofocus="autofocus"
+        :required="required"
+        :aria-readonly="readonly"
+        :disabled="disabled"
+        :class="className"
+        @change="updateSelf($event)"
+        @keyup="$emit('keyup', $event)"
+        @blur="handleBlur"
       >
         <option v-if="placeholder" selected value="">
           {{ placeholder }}
         </option>
         <option
-            v-for="(option, key) in options" :key="key"
-            :value="key"
-            :selected="key == modelValue"
+          v-for="(option, key) in options"
+          :key="key"
+          :value="key"
+          :selected="key === modelValue"
         >
           {{ option }}
         </option>
@@ -47,20 +47,20 @@
 <script>
 import Fieldtypes from "./index";
 import Input from "./customInput";
-import {Tooltip} from "../../index";
+import { Tooltip } from "../../index";
+
 export default {
   name: "SelectField",
-  components:{Tooltip},
+  components: { Tooltip },
   mixins: [Fieldtypes, Input],
   props: {
     options: {
       type: Object,
-      default: () => {
-      }
-    }
+      default: () => {},
+    },
   },
   emits: ["change", "blur", "keyup", "update:modelValue"],
-  setup(props, {emit}) {
+  setup(props, { emit }) {
     const handleChange = (event) => {
       emit("change", event);
     };
@@ -68,13 +68,13 @@ export default {
       emit("blur", event);
     };
     const updateSelf = (event) => {
-      handleChange(event)
+      handleChange(event);
       emit("update:modelValue", event.target.value);
-    }
+    };
     return {
       handleChange,
       handleBlur,
-      updateSelf
+      updateSelf,
     };
   },
   computed: {
@@ -82,8 +82,8 @@ export default {
       let classes = "";
       if (this.disabled) {
         classes =
-            classes +
-            "disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed ";
+          classes +
+          "disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed ";
       }
       if (this.hasError) {
         classes = classes + "border-red-300 ";

@@ -1,12 +1,12 @@
 <template>
   <tr>
     <td class="column-status" :class="status">
-      <span v-if="status === 'error'" class="icon icon-warning error"/>
+      <span v-if="status === 'error'" class="icon icon-warning error" />
       <loading-graphic v-else text="" />
     </td>
     <td class="column-thumbnail">
       <div class="img">
-        <file-icon :extension="extension"/>
+        <file-icon :extension="extension" />
       </div>
     </td>
 
@@ -19,15 +19,17 @@
     <td v-else class="column-progress">
       <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
         <div
-            class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-            :style="{ width: percent + '%' }"> {{ percent }}%
+          class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+          :style="{ width: percent + '%' }"
+        >
+          {{ percent }}%
         </div>
       </div>
     </td>
 
     <td style="width: 30px">
       <a v-if="status === 'error'" href="#" @click.prevent="clear">
-        <i class="icon icon-circle-with-cross"/>
+        <i class="icon icon-circle-with-cross" />
       </a>
     </td>
   </tr>
@@ -35,12 +37,12 @@
 
 <script>
 import FileIcon from "../FileIcon.vue";
-import {computed} from "vue";
+import { computed } from "vue";
 import LoadingGraphic from "../LoadingGraphic.vue";
 export default {
   components: {
     FileIcon,
-    LoadingGraphic
+    LoadingGraphic,
   },
   props: {
     extension: {
@@ -58,10 +60,10 @@ export default {
     error: {
       type: String,
       default: null,
-    }
+    },
   },
   emits: ["clear"],
-  setup(props, {emit}) {
+  setup(props, { emit }) {
     const status = computed(() => {
       if (props.error) {
         return "error";
@@ -70,16 +72,17 @@ export default {
       } else {
         return "uploading";
       }
-    })
+    });
 
     const clear = () => {
       emit("clear");
-    }
+    };
 
     return {
-      status, clear
-    }
-  }
+      status,
+      clear,
+    };
+  },
 };
 </script>
 <style lang="scss" scoped>

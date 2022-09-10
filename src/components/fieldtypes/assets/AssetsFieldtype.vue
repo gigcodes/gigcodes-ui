@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group assets-fieldtype" ref="root">
+  <div ref="root" class="form-group assets-fieldtype">
     <div class="field-inner">
       <label class="block text-sm font-medium mb-1"
         >{{ name }}
@@ -19,19 +19,19 @@
         <loading-graphic v-if="loading" />
 
         <div
-          class="drag-notification"
           v-if="
             containerSpecified &&
             !innerDragging &&
             draggingFile &&
             !showSelector
           "
+          class="drag-notification"
         >
           <i class="icon icon-download" />
           <h3>Drop to upload</h3>
         </div>
         <template v-if="!loading">
-          <div class="manage-assets" v-if="!maxFilesReached">
+          <div v-if="!maxFilesReached" class="manage-assets">
             <div v-if="!containerSpecified">
               <i class="icon icon-warning" />
               No asset container specified
@@ -41,8 +41,8 @@
               <btn
                 class="border border-slate-300 hover:border-indigo-300 mr-2"
                 type="tertiary"
-                @keyup.space.enter="openSelector"
                 tabindex="0"
+                @keyup.space.enter="openSelector"
                 @clicked="openSelector"
               >
                 <span
@@ -63,8 +63,8 @@
           </div>
 
           <uploader
-            ref="uploaderEl"
             v-if="containerSpecified && !showSelector"
+            ref="uploaderEl"
             :dom-element="uploadElement"
             :container="container"
             :path="folder"
@@ -73,24 +73,24 @@
           >
           </uploader>
 
-          <uploads v-if="uploads.length" :uploads="uploads"> </uploads>
+          <UploadsComponent v-if="uploads.length" :uploads="uploads" />
 
           <template v-if="expanded && !soloAsset">
             <div
-              class="asset-grid-listing"
               v-if="displayMode === 'grid'"
               ref="assetContainer"
+              class="asset-grid-listing"
             >
               <asset-tile
                 v-for="asset in assets"
                 :key="asset.id"
                 :asset="asset"
-                @removed="assetRemoved"
                 :data-id="asset.id"
+                @removed="assetRemoved"
               />
             </div>
 
-            <div class="asset-table-listing" v-if="displayMode === 'list'">
+            <div v-if="displayMode === 'list'" class="asset-table-listing">
               <table>
                 <tbody ref="assetContainer">
                   <asset-row
@@ -106,9 +106,9 @@
           </template>
 
           <div
-            class="asset-solo-container"
             v-if="expanded && soloAsset"
             ref="assetContainer"
+            class="asset-solo-container"
           >
             <asset-tile
               v-for="asset in assets"
@@ -128,9 +128,9 @@
           :selected="selectedAssets"
           :view-mode="selectorViewMode"
           :max-files="maxFiles"
+          :can-edit="config.canEdit ?? false"
           @selected="assetsSelected"
           @closed="closeSelector"
-          :can-edit="config.canEdit ?? false"
         >
         </selector>
       </div>
@@ -138,14 +138,13 @@
   </div>
 </template>
 
-
 <script setup>
 import AssetRow from "./AssetRow.vue";
 import AssetTile from "./AssetTile.vue";
 import Selector from "../../assets/Selector.vue";
 import Uploader from "../../assets/Uploader.vue";
-import Uploads from "../../assets/Uploads.vue";
-import _ from "underscore";
+import UploadsComponent from "../../assets/Uploads.vue";
+import { findIndex, findWhere, map } from "underscore";
 import { computed, inject, nextTick, onMounted, ref, watch } from "vue";
 import Cookies from "js-cookie";
 import LoadingGraphic from "../../LoadingGraphic.vue";
@@ -199,7 +198,6 @@ const uploaderEl = ref(null);
 const assets = ref([]);
 const uploads = ref([]);
 const loading = ref(true);
-const initializing = ref(true);
 const showSelector = ref(false);
 const selectorViewMode = ref(null);
 const draggingFile = ref(false);
@@ -208,7 +206,6 @@ const innerDragging = ref(false);
 const changeWatcherIsBound = ref(false);
 const changeWatcherWatchDeep = ref(true);
 const displayMode = ref("grid");
-const containerWidth = ref(null);
 const data = ref(props.data);
 const toast = createToaster();
 
@@ -246,14 +243,6 @@ const handleDrop = (event) => {
     if (files.length > 0) uploaderEl.value.uploadFile(event.dataTransfer.files);
   }
 };
-
-const update = (value) => emit("input", value);
-
-/**
- * Whether any assets have been selected.
- */
-
-const hasAssets = computed(() => Boolean(assets.value.length));
 
 /**
  * The initial container to be displayed in the selector.
@@ -308,10 +297,10 @@ const soloAsset = computed(() => maxFiles.value === 1);
 const selectedAssets = computed(() => {
   // If the value has an :: it's already an ID and we can return as-is.
   // Otherwise, we need to find the ID from the corresponding asset.
-  return _(props.data).map((value) => {
+  return map(props.data, (value) => {
     return value.id.includes("::")
       ? value.id
-      : _(assets.value).findWhere({ id: value.id }).id;
+      : findWhere(assets.value, { id: value.id }).id;
   });
 });
 
@@ -431,7 +420,7 @@ const closeSelector = () => {
  * When an asset remove button was clicked.
  */
 const assetRemoved = (asset) => {
-  const index = _.findIndex(assets.value, { id: asset.id });
+  const index = findIndex(assets.value, { id: asset.id });
   assets.value.splice(index, 1);
   if (maxFiles.value === 1) {
     uploaderEl.value.fileInput.value = "";
@@ -455,7 +444,6 @@ const sortable = () => {
     });
   }
 };
-
 
 Events.$on("close-selector", closeSelector);
 </script>

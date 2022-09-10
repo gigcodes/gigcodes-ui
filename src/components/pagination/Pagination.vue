@@ -1,123 +1,120 @@
 <template>
   <RenderlessVuePagination
-      :data="data"
-      :limit="limit"
-      :show-disabled="showDisabled"
-      :size="size"
-      :align="align"
-      @pagination-change-page="onPaginationChangePage"
-      v-slot="slotProps"
+    v-slot="slotProps"
+    :data="data"
+    :limit="limit"
+    :show-disabled="showDisabled"
+    :size="size"
+    :align="align"
+    @pagination-change-page="onPaginationChangePage"
   >
-    <ul
-        v-bind="$attrs"
-        class="pagination"
-        :class="{
-                'pagination-sm': slotProps.size === 'small',
-                'pagination-lg': slotProps.size === 'large',
-                'justify-content-center': slotProps.align === 'center',
-                'justify-content-end': slotProps.align === 'right'
-            }"
-        v-if="slotProps.computed.total > slotProps.computed.perPage">
-
-      <li
-          class="page-item pagination-prev-nav"
-          :class="{'disabled': !slotProps.computed.prevPageUrl}"
-          v-if="slotProps.computed.prevPageUrl || slotProps.showDisabled"
+    <div>
+      <p class="text-sm text-gray-700">
+        Showing
+        {{ " " }}
+        <span class="font-medium">{{ data.meta.from }}</span>
+        {{ " " }}
+        to
+        {{ " " }}
+        <span class="font-medium"> {{ data.meta.to }}</span>
+        {{ " " }}
+        of
+        {{ " " }}
+        <span class="font-medium">{{ data.meta.total }}</span>
+        {{ " " }}
+        results
+      </p>
+    </div>
+    <nav
+      v-if="slotProps.computed.total > slotProps.computed.perPage"
+      class="isolate inline-flex -space-x-px rounded-md shadow-sm"
+      aria-label="Pagination"
+    >
+      <a
+        v-if="slotProps.computed.prevPageUrl || slotProps.showDisabled"
+        :tabindex="!slotProps.computed.prevPageUrl && -1"
+        href="#"
+        class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+        :class="{ disabled: !slotProps.computed.prevPageUrl }"
+        v-on="slotProps.prevButtonEvents"
       >
-        <a
-            class="page-link"
-            href="#"
-            aria-label="Previous"
-            :tabindex="!slotProps.computed.prevPageUrl && -1"
-            v-on="slotProps.prevButtonEvents">
-          <slot name="prev-nav">
-            <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">Previous</span>
-          </slot>
-        </a>
-      </li>
-
-      <li
-          class="page-item pagination-page-nav"
-          v-for="(page, key) in slotProps.computed.pageRange"
-          :key="key"
-          :class="{ 'active': page === slotProps.computed.currentPage }"
+        <span class="sr-only">Previous</span>
+        <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
+      </a>
+      <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+      <a
+        v-for="(page, key) in slotProps.computed.pageRange"
+        :key="key"
+        href="#"
+        aria-current="page"
+        class="page"
+        :class="page === slotProps.computed.currentPage ? 'active' : 'inactive'"
+        v-on="slotProps.pageButtonEvents(page)"
+        >{{ page }}</a
       >
-        <a class="page-link" href="#" v-on="slotProps.pageButtonEvents(page)">
-          {{ page }}
-          <span class="sr-only" v-if="page === slotProps.computed.currentPage">(current)</span>
-        </a>
-      </li>
-
-      <li
-          class="page-item pagination-next-nav"
-          :class="{'disabled': !slotProps.computed.nextPageUrl}"
-          v-if="slotProps.computed.nextPageUrl || slotProps.showDisabled"
+      <a
+        v-if="slotProps.computed.nextPageUrl || slotProps.showDisabled"
+        href="#"
+        :tabindex="!slotProps.computed.nextPageUrl && -1"
+        class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+        :class="{ disabled: !slotProps.computed.nextPageUrl }"
+        v-on="slotProps.nextButtonEvents"
       >
-        <a
-            class="page-link" href="#" aria-label="Next"
-            :tabindex="!slotProps.computed.nextPageUrl && -1"
-            v-on="slotProps.nextButtonEvents"
-        >
-          <slot name="next-nav">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Next</span>
-          </slot>
-        </a>
-      </li>
-
-    </ul>
+        <span class="sr-only">Next</span>
+        <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
+      </a>
+    </nav>
   </RenderlessVuePagination>
 </template>
 
 <script>
-import RenderlessVuePagination from './RenderlessVuePagination.vue';
-
+import RenderlessVuePagination from "./RenderlessVuePagination.vue";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/solid";
 export default {
-  inheritAttrs: false,
-
-  emits: ['pagination-change-page'],
-
   components: {
-    RenderlessVuePagination
+    RenderlessVuePagination,
+    ChevronLeftIcon,
+    ChevronRightIcon,
   },
+  inheritAttrs: false,
 
   props: {
     data: {
       type: Object,
-      default: () => {
-      }
+      default: () => {},
     },
     limit: {
       type: Number,
-      default: 0
+      default: 0,
     },
     showDisabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     size: {
       type: String,
-      default: 'default',
-      validator: value => {
-        return ['small', 'default', 'large'].indexOf(value) !== -1;
-      }
+      default: "default",
+      validator: (value) => {
+        return ["small", "default", "large"].indexOf(value) !== -1;
+      },
     },
     align: {
       type: String,
-      default: 'left',
-      validator: value => {
-        return ['left', 'center', 'right'].indexOf(value) !== -1;
-      }
-    }
+      default: "left",
+      validator: (value) => {
+        return ["left", "center", "right"].indexOf(value) !== -1;
+      },
+    },
   },
+
+  emits: ["pagination-change-page"],
 
   methods: {
     onPaginationChangePage(page) {
-      this.$emit('pagination-change-page', page);
-    }
-  }
-}
+      this.$emit("pagination-change-page", page);
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -127,11 +124,12 @@ ul.pagination {
     @apply inline-flex items-center justify-center leading-5 px-3.5 py-2 bg-white hover:bg-indigo-500 border border-slate-200 text-slate-600 hover:text-white;
   }
 
-  a.page-link:hover, li.active a.page-link {
+  a.page-link:hover,
+  li.active a.page-link {
     --tw-bg-opacity: 1;
     --tw-text-opacity: 1;
-    background-color: rgb(99 102 241/var(--tw-bg-opacity));
-    color: rgb(255 255 255/var(--tw-text-opacity));
+    background-color: rgb(99 102 241 / var(--tw-bg-opacity));
+    color: rgb(255 255 255 / var(--tw-text-opacity));
   }
 
   li.active a.page-link {
@@ -147,4 +145,11 @@ ul.pagination {
   }
 }
 
+.page.active {
+  @apply relative z-10 inline-flex items-center border border-indigo-500 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 focus:z-20;
+}
+
+.page.inactive {
+  @apply relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20;
+}
 </style>

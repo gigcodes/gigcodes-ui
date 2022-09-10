@@ -1,8 +1,11 @@
 <template>
   <div class="breadcrumbs">
     <a
-        v-for="(part, i) in pathParts" :key="i" href=""
-        @click.prevent="selectFolder(i)">
+      v-for="(part, i) in pathParts"
+      :key="i"
+      href=""
+      @click.prevent="selectFolder(i)"
+    >
       <span class="icon icon-folder"></span>
       {{ part }}
     </a>
@@ -18,14 +21,12 @@ export default {
     },
     folder: {
       type: Object,
-      default: () => {
-      }
+      default: () => {},
     },
     folders: {
       type: Object,
-      default: () => {
-      }
-    }
+      default: () => {},
+    },
   },
   emits: ["navigated"],
   computed: {
@@ -36,16 +37,15 @@ export default {
       }
       if (this.folder.path.length > 1) {
         let path = this.folder.path.substring(1);
-        return parts.concat(path.split("/"))
-      } else
-        return parts.concat(this.folder.path.split("/"));
+        return parts.concat(path.split("/"));
+      } else return parts.concat(this.folder.path.split("/"));
     },
   },
 
   methods: {
     selectFolder(part) {
       const path =
-          part === 0 ? "/" : this.pathParts.slice(1, part + 1).join("/");
+        part === 0 ? "/" : this.pathParts.slice(1, part + 1).join("/");
 
       this.$emit("navigated", path);
     },

@@ -1,6 +1,6 @@
 {
   "name": "gigcodes-ui",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Vue and Tailwind CSS UI library built with reusability in mind from gigcodes.",
   "main": "./dist/gigcodes-admin.umd.js",
   "module": "./dist/gigcodes-admin.es.js",
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run format && vite build",
     "serve": "vite preview",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "format": "prettier --write \"src/**/*.{js,vue}\""
@@ -39,9 +39,10 @@
     "@tailwindcss/typography": "^0.5.1",
     "@vitejs/plugin-vue": "^1.9.3",
     "autoprefixer": "^10.3.7",
-    "eslint": "^8.10.0",
+    "cssnano": "^5.1.13",
+    "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-vue": "^8.5.0",
+    "eslint-plugin-vue": "^8.7.1",
     "luminous-lightbox": "^2.4.0",
     "postcss": "^8.3.11",
     "prettier": "2.5.1",
@@ -63,8 +64,6 @@
     "@vue/compiler-sfc": "^3.2.29",
     "axios": "^0.26.0",
     "cookies-js": "^1.2.3",
-    "cssnano": "^5.1.1",
-    "flatpickr": "^4.6.9",
     "he-tree-vue": "^3.0.3",
     "heroicons": "^1.0.6",
     "js-cookie": "^3.0.1",

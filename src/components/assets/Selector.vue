@@ -2,70 +2,59 @@
   <div class="asset-selector-modal">
     <div class="asset-selector shadow rounded-lg">
       <asset-browser
-          ref="assetBrowser"
-          :selected-container="container"
-          :selected-path="folder"
-          :selected-assets="browserSelections"
-          :restrict-navigation="restrictNavigation"
-          :max-files="maxFiles"
-          @selections-updated="selectionsUpdated"
-          @asset-doubleclicked="select"
-          :can-edit="canEdit"
+        ref="assetBrowser"
+        :selected-container="container"
+        :selected-path="folder"
+        :selected-assets="browserSelections"
+        :restrict-navigation="restrictNavigation"
+        :max-files="maxFiles"
+        :can-edit="canEdit"
+        @selections-updated="selectionsUpdated"
+        @asset-doubleclicked="select"
       >
         <template v-if="browserSelections.length">
-          <button
-              class="btn action mb-3"
-              @click="browserSelections = []"
-          >
+          <button class="btn action mb-3" @click="browserSelections = []">
             Uncheck all
           </button>
         </template>
       </asset-browser>
-      <div class="p-3 text-right border-t border-gray-200 bg-gray-50 rounded-b-lg">
+      <div
+        class="p-3 text-right border-t border-gray-200 bg-gray-50 rounded-b-lg"
+      >
         <div v-if="browserSelections.length" class="float-left mt-2">
-          {{ browserSelections.length }}<span v-if="maxFiles">/{{ maxFiles }}</span> Selected
+          {{ browserSelections.length
+          }}<span v-if="maxFiles">/{{ maxFiles }}</span> Selected
         </div>
-        <button
-            type="button"
-            @click="close"
-            class="close-btn">
-          Cancel
-        </button>
-        <button
-            type="button"
-            @click="select"
-            class="select-btn">
-          Select
-        </button>
+        <button type="button" class="close-btn" @click="close">Cancel</button>
+        <button type="button" class="select-btn" @click="select">Select</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {default as AssetBrowser} from "./Browser/Browser.vue";
+import { default as AssetBrowser } from "./Browser/Browser.vue";
 
 export default {
-  emits: ["modal.open", "selected", "closed"],
   components: {
-    AssetBrowser
+    AssetBrowser,
   },
   props: {
     container: {
       type: String,
-      default: null
+      default: null,
     },
     folder: {
       type: String,
-      default: null
+      default: null,
     },
     selected: {
       type: Array,
-      default: () => ([])
+      default: () => [],
     },
     maxFiles: {
       type: Number,
-      default: null
+      default: null,
     },
     restrictNavigation: {
       type: Boolean,
@@ -74,8 +63,9 @@ export default {
     canEdit: {
       type: Boolean,
       default: false,
-    }
+    },
   },
+  emits: ["modal.open", "selected", "closed"],
 
   data() {
     return {

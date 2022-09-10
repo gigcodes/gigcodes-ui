@@ -2,38 +2,47 @@
   <div class="asset-table-listing gigcodes">
     <table v-if="!isSearching || (isSearching && hasResults)" class="w-full">
       <thead>
-      <tr>
-        <th></th>
-        <th
+        <tr>
+          <th></th>
+          <th
             v-for="(column, index) in columns"
             :key="index"
-            :class="{'extra-col': column.extra,active: isColumnActive(column),'column-sortable': !isSearching}"
+            :class="{
+              'extra-col': column.extra,
+              active: isColumnActive(column),
+              'column-sortable': !isSearching,
+            }"
             @click="$emit('sorted', column.field)"
-        >
-          {{ column.label }}
-          <i
+          >
+            {{ column.label }}
+            <i
               v-if="isColumnActive(column)"
-              :class="sortOrder === 'asc'? 'icon icon-chevron-up': 'icon icon-chevron-down'"/>
-        </th>
-        <th class="column-actions"></th>
-      </tr>
+              :class="
+                sortOrder === 'asc'
+                  ? 'icon icon-chevron-up'
+                  : 'icon icon-chevron-down'
+              "
+            />
+          </th>
+          <th class="column-actions"></th>
+        </tr>
       </thead>
       <tbody>
-      <tr v-if="hasParent && !restrictNavigation">
-        <td @click.prevent="selectFolder(folder.parent)">
-          <div class="img">
-            <a>
-              <file-icon extension="folder"/>
-            </a>
-          </div>
-        </td>
-        <td>
-          <a href="" @click.prevent="selectFolder(folder.parent)">..</a>
-        </td>
-        <td colspan="3">..</td>
-      </tr>
+        <tr v-if="hasParent && !restrictNavigation">
+          <td @click.prevent="selectFolder(folder.parent)">
+            <div class="img">
+              <a>
+                <file-icon extension="folder" />
+              </a>
+            </div>
+          </td>
+          <td>
+            <a href="" @click.prevent="selectFolder(folder.parent)">..</a>
+          </td>
+          <td colspan="3">..</td>
+        </tr>
 
-      <folder-row
+        <folder-row
           v-for="(folderItem, index) in subfolders"
           :key="index"
           :folder="folderItem"
@@ -42,13 +51,14 @@
           @editing="editFolder"
           @deleting="deleteFolder"
           @dropped-on-folder="droppedOnFolder"
-      ></folder-row>
+        ></folder-row>
 
-      <asset-row
+        <asset-row
           v-for="asset in assets"
           :key="asset.id"
           :asset="asset"
           :selected-assets="selectedAssets"
+          :can-edit="canEdit"
           @open-dropdown="closeDropdowns"
           @selected="selectAsset"
           @deselected="deselectAsset"
@@ -56,22 +66,19 @@
           @deleting="deleteAsset"
           @assetdragstart="assetDragStart"
           @doubleclicked="assetDoubleclicked"
-          :can-edit="canEdit"
-      ></asset-row>
+        ></asset-row>
       </tbody>
     </table>
   </div>
   <modal
-      :open="deleteModal"
-      @cancelled="deleteFolderItem(false)"
-      @confirmed="deleteFolderItem(true)"
+    :open="deleteModal"
+    @cancelled="deleteFolderItem(false)"
+    @confirmed="deleteFolderItem(true)"
   >
-    <template #header>
-      Delete the folder selected ?
-    </template>
+    <template #header> Delete the folder selected ? </template>
     <template #body>
-      On clicking confirm the selected item will be deleted. If
-      you don't wish to do it then please press cancel.
+      On clicking confirm the selected item will be deleted. If you don't wish
+      to do it then please press cancel.
     </template>
   </modal>
 </template>
@@ -81,13 +88,10 @@ import AssetRow from "./AssetRow.vue";
 import FolderRow from "./FolderRow.vue";
 import FileIcon from "../../../FileIcon.vue";
 import Modal from "../../../modal/Modal.vue";
-import {createToaster} from "../../../../index"
-import {inject, ref} from "vue";
+import { createToaster } from "../../../../index";
+import { inject, ref } from "vue";
 
 export default {
-  emits: ["sorted", "folder-deleted", "asset-deleting",
-    "asset-deselected", "asset-editing", "asset-deselected",
-    "assets-dragged-to-folder", "folder-selected", "asset-selected", "asset-doubleclicked", "folder-editing"],
   components: {
     FileIcon,
     AssetRow,
@@ -97,72 +101,88 @@ export default {
   props: {
     container: {
       type: String,
-      default: null
+      default: null,
     },
     assets: {
       type: Array,
-      default: () => ([])
+      default: () => [],
     },
     folder: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     subfolders: {
       type: Array,
-      default: () => ([])
+      default: () => [],
     },
     loading: {
       default: true,
-      type: Boolean
+      type: Boolean,
     },
     selectedAssets: {
       type: Array,
-      default: () => ([])
+      default: () => [],
     },
     restrictNavigation: {
       default: true,
-      type: Boolean
+      type: Boolean,
     },
     isSearching: {
       default: true,
-      type: Boolean
+      type: Boolean,
     },
     canEdit: {
       type: Boolean,
-      default: false
-    }
-
+      default: false,
+    },
   },
-  setup(_,{emit}) {
-    const toast = createToaster()
+  emits: [
+    "sorted",
+    "folder-deleted",
+    "asset-deleting",
+    "asset-deselected",
+    "asset-editing",
+    "asset-deselected",
+    "assets-dragged-to-folder",
+    "folder-selected",
+    "asset-selected",
+    "asset-doubleclicked",
+    "folder-editing",
+  ],
+  setup(_, { emit }) {
+    const toast = createToaster();
     const deleteModal = ref(false);
     const deleteFolderSelected = ref(null);
-    const deleteFolderService = inject("deleteFolderService")
+    const deleteFolderService = inject("deleteFolderService");
     const deleteFolderItem = (type) => {
       if (type) {
         try {
-          deleteFolderService(deleteFolderSelected.value.uuid).then(() => {
-            toast.success('Folder deleted successfully');
-            emit('folder-deleted')
-            deleteModal.value = false;
-          }).catch(() => {
-            toast.error("Unable to delete the folder")
-            deleteModal.value = false;
-          })
+          deleteFolderService(deleteFolderSelected.value.uuid)
+            .then(() => {
+              toast.success("Folder deleted successfully");
+              emit("folder-deleted");
+              deleteModal.value = false;
+            })
+            .catch(() => {
+              toast.error("Unable to delete the folder");
+              deleteModal.value = false;
+            });
         } catch (e) {
-          toast.error("Unable to delete the folder")
+          toast.error("Unable to delete the folder");
           deleteModal.value = false;
-          console.log("deleteFolderService is not registered")
+          console.log("deleteFolderService is not registered");
         }
       } else {
         deleteModal.value = false;
-        toast.info("Folder delete cancelled")
+        toast.info("Folder delete cancelled");
       }
-    }
+    };
 
     return {
-      deleteFolderItem, deleteModal, deleteFolderSelected
-    }
+      deleteFolderItem,
+      deleteModal,
+      deleteFolderSelected,
+    };
   },
   data() {
     return {
@@ -203,10 +223,7 @@ export default {
   },
 
   methods: {
-    closeDropdowns: function () {
-
-    },
-
+    closeDropdowns: function () {},
 
     droppedOnFolder(folder, e) {
       const asset = e.dataTransfer.getData("asset");

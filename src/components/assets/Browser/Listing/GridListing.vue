@@ -1,19 +1,19 @@
 <template>
   <div
-      v-if="
-            (hasParent && !restrictNavigation) ||
-            !isSearching ||
-            (isSearching && hasResults)
-        "
-      class="asset-grid-listing"
+    v-if="
+      (hasParent && !restrictNavigation) ||
+      !isSearching ||
+      (isSearching && hasResults)
+    "
+    class="asset-grid-listing"
   >
     <div
-        v-if="hasParent && !restrictNavigation"
-        class="asset-tile is-folder"
-        @click.prevent="selectFolder(folder.parent)"
+      v-if="hasParent && !restrictNavigation"
+      class="asset-tile is-folder"
+      @click.prevent="selectFolder(folder.parent)"
     >
       <div class="asset-thumb-container">
-        <file-icon extension="folder"/>
+        <file-icon extension="folder" />
       </div>
       <div class="asset-meta">
         <div class="asset-filename">..</div>
@@ -21,24 +21,24 @@
     </div>
 
     <folder-tile
-        v-for="(f, index) in subfolders"
-        :key="index"
-        :folder="f"
-        @selected="selectFolder"
-        @editing="editFolder"
-        @deleting="deleteFolder"
+      v-for="(f, index) in subfolders"
+      :key="index"
+      :folder="f"
+      @selected="selectFolder"
+      @editing="editFolder"
+      @deleting="deleteFolder"
     >
     </folder-tile>
 
     <asset-tile
-        v-for="asset in assets"
-        :key="asset.id"
-        :asset="asset"
-        :selected-assets="selectedAssets"
-        @selected="selectAsset"
-        @deselected="deselectAsset"
-        @editing="editAsset"
-        @doubleclicked="assetDoubleclicked"
+      v-for="asset in assets"
+      :key="asset.id"
+      :asset="asset"
+      :selected-assets="selectedAssets"
+      @selected="selectAsset"
+      @deselected="deselectAsset"
+      @editing="editAsset"
+      @doubleclicked="assetDoubleclicked"
     >
     </asset-tile>
   </div>
@@ -50,9 +50,6 @@ import FolderTile from "./FolderTile.vue";
 import FileIcon from "../../../FileIcon.vue";
 
 export default {
-  emits: ["sorted", "folder-deleted", "asset-deleting",
-    "asset-deselected", "asset-editing", "asset-deselected",
-    "assets-dragged-to-folder", "folder-selected", "asset-selected", "asset-doubleclicked", "folder-editing"],
   components: {
     FileIcon,
     AssetTile,
@@ -61,43 +58,54 @@ export default {
   props: {
     container: {
       type: String,
-      default: null
+      default: null,
     },
     assets: {
       type: Array,
-      default: () => ([])
+      default: () => [],
     },
     folder: {
       type: Object,
-      default: () => {
-      }
+      default: () => {},
     },
     subfolders: {
       type: Array,
-      default: () => ([])
+      default: () => [],
     },
     loading: {
       default: true,
-      type: Boolean
+      type: Boolean,
     },
     selectedAssets: {
       type: Array,
-      default: () => ([])
+      default: () => [],
     },
     restrictNavigation: {
       default: true,
-      type: Boolean
+      type: Boolean,
     },
     isSearching: {
       default: true,
-      type: Boolean
+      type: Boolean,
     },
     canEdit: {
       type: Boolean,
-      default: false
-    }
-
+      default: false,
+    },
   },
+  emits: [
+    "sorted",
+    "folder-deleted",
+    "asset-deleting",
+    "asset-deselected",
+    "asset-editing",
+    "asset-deselected",
+    "assets-dragged-to-folder",
+    "folder-selected",
+    "asset-selected",
+    "asset-doubleclicked",
+    "folder-editing",
+  ],
   computed: {
     hasResults() {
       return this.assets.length || this.subfolders.length;
@@ -163,6 +171,7 @@ export default {
     /**
      * Delete a folder.
      */
+    // eslint-disable-next-line no-unused-vars
     deleteFolder(folder) {
       //@todo add delete modal
       // swal({

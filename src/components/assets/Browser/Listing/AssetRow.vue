@@ -1,17 +1,14 @@
 <template>
-  <tr
-      :class="{ selected: isSelected }"
-      @click="toggle"
-  >
+  <tr :class="{ selected: isSelected }" @click="toggle">
     <td class="thumbnail-col" @dragstart="assetDragStart">
       <div
-          v-if="canShowSvg"
-          class="img svg-img"
-          :style="svgBackgroundStyle"
+        v-if="canShowSvg"
+        class="img svg-img"
+        :style="svgBackgroundStyle"
       ></div>
       <div v-else class="img">
-        <img v-if="asset.is_image" :src="asset.thumbnail"/>
-        <file-icon v-else :extension="asset.extension"/>
+        <img v-if="asset.is_image" :src="asset.thumbnail" alt="" />
+        <file-icon v-else :extension="asset.extension" />
       </div>
     </td>
 
@@ -24,24 +21,31 @@
     <td class="column-actions">
       <div class="btn-group action-more">
         <button
-            type="button"
-            @click="showActionsDropdown = !showActionsDropdown"
-            class="btn-more dropdown-toggle"
-            aria-haspopup="true" aria-expanded="false">
-            <i class="icon icon-dots-three-vertical"></i>
+          type="button"
+          class="btn-more dropdown-toggle"
+          aria-haspopup="true"
+          aria-expanded="false"
+          @click="showActionsDropdown = !showActionsDropdown"
+        >
+          <i class="icon icon-dots-three-vertical"></i>
         </button>
-        <ul class="dropdown-menu" :class="{show : showActionsDropdown }">
+        <ul class="dropdown-menu" :class="{ show: showActionsDropdown }">
           <li v-if="canEdit">
             <a
-                href="#"
-                @click="closeDropdownAndEditAsset"
-                class="text-gray-700 hover:bg-gray-100 hover:text-gray-900 block px-4 py-1 text-sm">Edit</a></li>
+              href="#"
+              class="text-gray-700 hover:bg-gray-100 hover:text-gray-900 block px-4 py-1 text-sm"
+              @click="closeDropdownAndEditAsset"
+              >Edit</a
+            >
+          </li>
           <li class="divider"></li>
           <li class="warning">
             <a
-                @click.prevent="closeDropdownAndDeleteAsset"
-                href="#"
-                class="text-gray-700 hover:bg-rose-600 hover:text-white block px-4 py-1 text-sm">Delete</a>
+              href="#"
+              class="text-gray-700 hover:bg-rose-600 hover:text-white block px-4 py-1 text-sm"
+              @click.prevent="closeDropdownAndDeleteAsset"
+              >Delete</a
+            >
           </li>
         </ul>
       </div>

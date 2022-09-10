@@ -1,8 +1,5 @@
 <template>
-  <div
-      class="asset-tile is-folder"
-      @click.prevent="selectFolder(folder)"
-  >
+  <div class="asset-tile is-folder" @click.prevent="selectFolder(folder)">
     <div class="asset-thumb-container">
       <file-icon extension="folder"></file-icon>
     </div>
@@ -20,7 +17,7 @@ import Folder from "./Folder";
 import FileIcon from "../../../FileIcon.vue";
 
 export default {
+  components: { FileIcon },
   mixins: [Folder],
-  components: {FileIcon}
 };
 </script>

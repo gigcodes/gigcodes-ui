@@ -1,15 +1,15 @@
 <template>
   <selector
-    ref="selectorEl"
     v-if="open"
+    ref="selectorEl"
     :container="container"
     :folder="'/'"
     :restrict-navigation="false"
     :selected="[]"
     view-mode="grid"
     :max-files="1"
-    @closed="emit('closed')"
     :can-edit="canEdit"
+    @closed="emit('closed')"
     @selected="selectedAsset"
   >
   </selector>
@@ -27,7 +27,7 @@ import { ref } from "vue";
 
 const emit = defineEmits(["closed", "selected"]);
 const selectorEl = ref(null);
-const props = defineProps({
+defineProps({
   open: {
     default: false,
     type: Boolean,
@@ -47,5 +47,4 @@ const selectedAsset = () => {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

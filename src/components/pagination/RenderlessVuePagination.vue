@@ -1,71 +1,78 @@
 <script>
 export default {
-  emits: ['pagination-change-page'],
-
   props: {
     data: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     limit: {
       type: Number,
-      default: 0
+      default: 0,
     },
     showDisabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     size: {
       type: String,
-      default: 'default',
-      validator: value => {
-        return ['small', 'default', 'large'].indexOf(value) !== -1;
-      }
+      default: "default",
+      validator: (value) => {
+        return ["small", "default", "large"].indexOf(value) !== -1;
+      },
     },
     align: {
       type: String,
-      default: 'left',
-      validator: value => {
-        return ['left', 'center', 'right'].indexOf(value) !== -1;
-      }
-    }
+      default: "left",
+      validator: (value) => {
+        return ["left", "center", "right"].indexOf(value) !== -1;
+      },
+    },
   },
+  emits: ["pagination-change-page"],
 
   computed: {
-    isApiResource () {
+    isApiResource() {
       return !!this.data.meta;
     },
-    currentPage () {
-      return this.isApiResource ? this.data.meta.current_page : this.data.current_page;
+    currentPage() {
+      return this.isApiResource
+        ? this.data.meta.current_page
+        : this.data.current_page;
     },
-    firstPageUrl () {
+    firstPageUrl() {
       return this.isApiResource ? this.data.links.first : null;
     },
-    from () {
+    from() {
       return this.isApiResource ? this.data.meta.from : this.data.from;
     },
-    lastPage () {
-      return this.isApiResource ? this.data.meta.last_page : this.data.last_page;
+    lastPage() {
+      return this.isApiResource
+        ? this.data.meta.last_page
+        : this.data.last_page;
     },
-    lastPageUrl () {
+    lastPageUrl() {
       return this.isApiResource ? this.data.links.last : null;
     },
-    nextPageUrl () {
-      return this.isApiResource ? this.data.links.next : this.data.next_page_url;
+    nextPageUrl() {
+      return this.isApiResource
+        ? this.data.links.next
+        : this.data.next_page_url;
     },
-    perPage () {
+    perPage() {
       return this.isApiResource ? this.data.meta.per_page : this.data.per_page;
     },
-    prevPageUrl () {
-      return this.isApiResource ? this.data.links.prev : this.data.prev_page_url;
+    prevPageUrl() {
+      return this.isApiResource
+        ? this.data.links.prev
+        : this.data.prev_page_url;
     },
-    to () {
+    to() {
       return this.isApiResource ? this.data.meta.to : this.data.to;
     },
-    total () {
+    total() {
       return this.isApiResource ? this.data.meta.total : this.data.total;
     },
-    pageRange () {
+    pageRange() {
       if (this.limit === -1) {
         return 0;
       }
@@ -94,7 +101,7 @@ export default {
           if (i - l === 2) {
             pages.push(l + 1);
           } else if (i - l !== 1) {
-            pages.push('...');
+            pages.push("...");
           }
         }
         pages.push(i);
@@ -102,26 +109,26 @@ export default {
       });
 
       return pages;
-    }
+    },
   },
 
   methods: {
-    previousPage () {
-      this.selectPage((this.currentPage - 1));
+    previousPage() {
+      this.selectPage(this.currentPage - 1);
     },
-    nextPage () {
-      this.selectPage((this.currentPage + 1));
+    nextPage() {
+      this.selectPage(this.currentPage + 1);
     },
-    selectPage (page) {
-      if (page === '...') {
+    selectPage(page) {
+      if (page === "...") {
         return;
       }
 
-      this.$emit('pagination-change-page', page);
-    }
+      this.$emit("pagination-change-page", page);
+    },
   },
 
-  render () {
+  render() {
     return this.$slots.default({
       data: this.data,
       limit: this.limit,
@@ -140,27 +147,27 @@ export default {
         prevPageUrl: this.prevPageUrl,
         to: this.to,
         total: this.total,
-        pageRange: this.pageRange
+        pageRange: this.pageRange,
       },
       prevButtonEvents: {
         click: (e) => {
           e.preventDefault();
           this.previousPage();
-        }
+        },
       },
       nextButtonEvents: {
         click: (e) => {
           e.preventDefault();
           this.nextPage();
-        }
+        },
       },
-      pageButtonEvents: page => ({
+      pageButtonEvents: (page) => ({
         click: (e) => {
           e.preventDefault();
           this.selectPage(page);
-        }
-      })
+        },
+      }),
     });
-  }
-}
+  },
+};
 </script>

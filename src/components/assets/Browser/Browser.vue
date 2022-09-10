@@ -6,7 +6,7 @@
     @dragleave.prevent="draggingFile = false"
     @drop.prevent="dropFile"
   >
-    <div class="align-middle w-full" v-if="!initialized">
+    <div v-if="!initialized" class="align-middle w-full">
       <loading-graphic />
     </div>
 
@@ -46,19 +46,11 @@
         </h1>
 
         <div class="asset-browser-actions flex flex-wrap">
-          <div class="px-3" v-if="!assetsSelected.length">
+          <div v-if="!assetsSelected.length" class="px-3">
             <label for="search" class="sr-only">Search</label>
             <div class="relative rounded-md shadow-sm">
               <div
-                class="
-                  absolute
-                  inset-y-0
-                  left-0
-                  pl-3
-                  flex
-                  items-center
-                  pointer-events-none
-                "
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                 aria-hidden="true"
               >
                 <!-- Heroicon name: solid/search -->
@@ -77,27 +69,19 @@
                 </svg>
               </div>
               <input
-                type="text"
-                v-model="searchTerm"
-                name="search"
                 id="search"
-                class="
-                  focus:ring-indigo-500 focus:border-indigo-500
-                  block
-                  w-full
-                  pl-9
-                  sm:text-sm
-                  border-gray-300
-                  rounded-md
-                "
+                v-model="searchTerm"
+                type="text"
+                name="search"
+                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-9 sm:text-sm border-gray-300 rounded-md"
                 placeholder="Search"
               />
             </div>
           </div>
           <div v-if="assetsSelected.length">
             <btn type="danger" class="mr-0.5" @click="deleteModalMulti = true"
-              >Delete</btn
-            >
+              >Delete
+            </btn>
             <btn type="tertiary" @click="assetsSelected = []">Uncheck All</btn>
           </div>
 
@@ -141,16 +125,16 @@
             </btn>
             <btn
               type="tertiary"
-              @clicked="setDisplayMode('table')"
               :class="{ depressed: displayMode === 'table' }"
+              @clicked="setDisplayMode('table')"
               ><span class="icon icon-list"
             /></btn>
           </div>
 
           <div class="btn-group action mb-3">
             <btn
-              class="mr-0.5"
               v-if="!restrictNavigation && !isSearching"
+              class="mr-0.5"
               type="tertiary"
               @click.prevent="createFolder"
             >
@@ -179,7 +163,7 @@
         >
         </uploader>
 
-        <uploads v-if="uploads.length" :uploads="uploads"></uploads>
+        <UploadsComponent v-if="uploads.length" :uploads="uploads" />
 
         <component
           :is="listingComponent"
@@ -191,6 +175,7 @@
           :selected-assets="selectedAssets"
           :restrict-navigation="restrictNavigation"
           :is-searching="isSearching"
+          :can-edit="canEdit"
           @folder-selected="folderSelected"
           @folder-editing="editFolder"
           @folder-deleted="folderDeleted"
@@ -201,7 +186,6 @@
           @assets-dragged-to-folder="assetsDraggedToFolder"
           @asset-doubleclicked="assetDoubleClicked"
           @sorted="sortBy"
-          :can-edit="canEdit"
         >
         </component>
 
@@ -211,7 +195,7 @@
         </div>
       </div>
 
-      <pagination
+      <Pagination
         :data="pagination"
         :limit="2"
         @pagination-change-page="paginationPageSelected"
@@ -241,7 +225,7 @@
         :create="true"
         :container="container"
         :path="path"
-        :parent_uuid="folder?.uuid"
+        :parent-uuid="folder?.uuid"
         @closed="folderCreatorClosed"
         @created="folderCreated"
       >
@@ -252,7 +236,7 @@
         :create="false"
         :container="container"
         :path="editedFolderPath"
-        :parent_uuid="folder?.uuid"
+        :parent-uuid="folder?.uuid"
         @closed="folderEditorClosed"
         @updated="loadAssets"
       >
@@ -265,15 +249,14 @@
 import GridListing from "./Listing/GridListing.vue";
 import TableListing from "./Listing/TableListing.vue";
 import Uploader from "../Uploader.vue";
-import Uploads from "../Uploads.vue";
+import UploadsComponent from "../Uploads.vue";
 import AssetEditor from "../Editor/Editor.vue";
 import FolderEditor from "./FolderEditor.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import Pagination from "../../pagination/Pagination.vue";
-import { Events } from "../../../index";
-import _ from "underscore";
+import { Btn, Events } from "../../../index";
+import { chain, contains, difference, map, pick, without } from "underscore";
 import LoadingGraphic from "../../LoadingGraphic.vue";
-import { Btn } from "../../../index";
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import Cookies from "cookies-js";
 import Modal from "../../modal/Modal.vue";
@@ -363,9 +346,9 @@ const loadContainers = () => {
     // Set the containers property to a collection of the items in the response.
     // We are only interested in certain keys, and we want them indexed by
     // ID to make retrieving container values simpler down the road.
-    containers.value = _.chain(response.data.items)
+    containers.value = chain(response.data.items)
       .map((container) => {
-        return _.pick(container, "id", "title", "uuid", "item_id");
+        return pick(container, "id", "title", "uuid", "item_id");
       })
       .indexBy("id")
       .value();
@@ -444,7 +427,7 @@ const deleteAsset = (ids) => {
   try {
     deleteFilesService({ ids }).then(() => {
       loadAssets();
-      assetsSelected.value = _.difference(assetsSelected.value, ids);
+      assetsSelected.value = difference(assetsSelected.value, ids);
     });
   } catch (e) {
     console.log(e);
@@ -467,37 +450,29 @@ const fullPath = computed(() => {
   return fullPath;
 });
 
-const maxFilesReached = computed(() => {
-  return props.maxFiles && props.selectedAssets.length >= props.maxFiles;
-});
+const maxFilesReached = computed(
+  () => props.maxFiles && props.selectedAssets.length >= props.maxFiles
+);
 
-const initialized = computed(() => {
-  return initializedAssets.value && !loadingContainers.value;
-});
+const initialized = computed(
+  () => initializedAssets.value && !loadingContainers.value
+);
 
 /**
  * Whether the current folder has assets.
  */
-const hasAssets = computed(() => {
-  return assets.value.length > 0;
-});
+const hasAssets = computed(() => assets.value.length > 0);
 
-const loading = computed(() => {
-  return loadingAssets.value || loadingContainers.value;
-});
+const loading = computed(() => loadingAssets.value || loadingContainers.value);
 
 const subfolders = computed(() => {
   if (props.restrictNavigation) return [];
   return folders.value;
 });
 
-const hasSubfolders = computed(() => {
-  return subfolders.value.length > 0;
-});
+const hasSubfolders = computed(() => subfolders.value.length > 0);
 
-const isEmpty = computed(() => {
-  return !hasAssets.value && !hasSubfolders.value;
-});
+const isEmpty = computed(() => !hasAssets.value && !hasSubfolders.value);
 
 const showSidebar = computed(() => {
   if (!initialized.value) return false;
@@ -509,21 +484,15 @@ const showSidebar = computed(() => {
   return Object.keys(containers.value).length > 1;
 });
 
-const listingComponent = computed(() => {
-  return displayMode.value === "grid" ? GridListing : TableListing;
-});
+const listingComponent = computed(() =>
+  displayMode.value === "grid" ? GridListing : TableListing
+);
 
-const showAssetEditor = computed(() => {
-  return Boolean(editedAssetId.value);
-});
+const showAssetEditor = computed(() => Boolean(editedAssetId.value));
 
-const showFolderEditor = computed(() => {
-  return editedFolderPath.value !== null;
-});
+const showFolderEditor = computed(() => editedFolderPath.value !== null);
 
-const uploadElement = computed(() => {
-  return el.value;
-});
+const uploadElement = computed(() => el.value);
 
 const dropFile = (event) => {
   const files = event.dataTransfer.files;
@@ -574,7 +543,7 @@ const selectContainer = (c) => {
  * When an asset has been deselected.
  */
 const assetDeselected = (asset) => {
-  assetsSelected.value = _.without(assetsSelected.value, asset.id);
+  assetsSelected.value = without(assetsSelected.value, asset.id);
 };
 
 /**
@@ -633,7 +602,7 @@ const assetSelected = (assetItem) => {
   }
 
   // Don't add the same asset twice.
-  if (_.contains(assetsSelected.value, assetItem.id)) {
+  if (contains(assetsSelected.value, assetItem.id)) {
     return;
   }
 
@@ -642,7 +611,7 @@ const assetSelected = (assetItem) => {
   // For some reason, Vue wasn't reacting to new item.
   // It would show up in the data, but wouldn't adjust the view.
   // Mapping over itself fixes this. ¯\_(ツ)_/¯
-  assetsSelected.value = _.map(assetsSelected.value, (val) => val);
+  assetsSelected.value = map(assetsSelected.value, (val) => val);
 };
 
 /**
@@ -797,9 +766,5 @@ onBeforeUnmount(() => {
 <style>
 .depressed {
   background: rgba(0, 0, 0, 0.02);
-}
-
-.assets-search {
-  @apply p-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-9 sm:text-sm border-gray-300 rounded-md;
 }
 </style>

@@ -1,19 +1,19 @@
 <template>
-    <div class="loading">
-        <span class="icon icon-circular-graph animation-spin"></span>
-        {{ text }}
-    </div>
+  <div class="loading">
+    <span class="icon icon-circular-graph animation-spin"></span>
+    {{ text }}
+  </div>
 </template>
 
 <script>
 export default {
-    name: "LoadingGraphic",
-    props: {
-        text: {
-            type: String,
-            default: 'Loading'
-        }
+  name: "LoadingGraphic",
+  props: {
+    text: {
+      type: String,
+      default: "Loading",
     },
+  },
 };
 </script>
 

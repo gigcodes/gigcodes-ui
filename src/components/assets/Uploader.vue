@@ -12,7 +12,7 @@
 
 <script>
 import { inject, ref, watch } from "vue";
-import _ from "underscore";
+import { findIndex, findWhere } from "underscore";
 import { createToaster } from "../../plugins/toaster";
 
 export default {
@@ -68,7 +68,7 @@ export default {
           let percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
-          let upload = _(uploads.value).findWhere({ id: uuid });
+          let upload = findWhere(uploads.value, { id: uuid });
           upload.percent = percentCompleted;
           emit("updated", uploads.value);
         },
@@ -79,10 +79,10 @@ export default {
           if (response.status === 201) {
             if (response.data.success) {
               emit("upload-complete", response.data.item, uploads.value);
-              let index = _(uploads.value).findIndex({ id: uuid });
+              let index = findIndex(uploads.value, { id: uuid });
               uploads.value.splice(index, 1);
             } else {
-              let upload = _(uploads.value).findWhere({ id: uuid });
+              let upload = findWhere(uploads.value, { id: uuid });
               upload.errorMessage = "Error on file upload";
               toast.error("Error on file upload");
               emit("updated", uploads.value);
@@ -93,7 +93,7 @@ export default {
           }
         })
         .catch((err) => {
-          let upload = _(uploads.value).findWhere({ id: uuid });
+          let upload = findWhere(uploads.value, { id: uuid });
           if (err.response.status === 413) {
             toast.error("File size is too large");
             upload.errorMessage = "File size is too large";
