@@ -34,9 +34,6 @@ $asset_bg: #394045;
 }
 
 @import 'additional-styles/utility-patterns.scss';
-@import 'additional-styles/range-slider.scss';
-@import 'additional-styles/toggle-switch.scss';
-@import 'additional-styles/flatpickr.scss';
 @import 'additional-styles/theme.scss';
 @import 'additional-styles/animation.scss';
 @import 'additional-styles/entypo.scss';
@@ -45,7 +42,6 @@ $asset_bg: #394045;
 @import 'additional-styles/luminous.scss';
 
 @import "page-tree";
-@import "faltpicker";
 @import "assets-fieldtype.scss";
 @import "dossier";
 @import "additional-styles/dropdown-menu";
