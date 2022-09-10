@@ -118,33 +118,43 @@
                 <MenuItems
                     class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div class="py-1">
-                    <MenuItem as="div" v-slot="{ active }" v-for="(action,index) in tableOptions.partials.actions"
-                              :key="index">
-                      <a v-if="action === 'edit' && (item.canEdit === undefined || item.canEdit === true)"
-                         @click.prevent="goTo(item.edit_url)"
-                         href="javascript:void(0)"
-                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                        <PencilAltIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true"/>
-                        Edit
-                      </a>
-
-                      <a v-if="action === 'delete' && (item.canDelete === undefined || item.canDelete === true)"
-                         @click.prevent="showDeleteModal(item)"
-                         href="javascript:void(0)"
-                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                        <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true"/>
-                        Delete
-                      </a>
-                      <a v-if="item.custom_action_text"
-                         @click.prevent="goTo(item.custom_action_link)"
-                         href="javascript:void(0)"
-                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                        <ArchiveIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                                     aria-hidden="true"/>
-                        {{ item.custom_action_text }}
-                      </a>
+                    <template v-for="(action,index) in tableOptions.partials.actions">
+                      <MenuItem as="div" v-slot="{ active }"
+                                v-if="action === 'edit' && (item.canEdit === undefined || item.canEdit === true)"
+                                :key="index">
+                        <a
+                            @click.prevent="goTo(item.edit_url)"
+                            href="javascript:void(0)"
+                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                          <PencilAltIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                         aria-hidden="true"/>
+                          Edit
+                        </a>
+                      </MenuItem>
+                      <MenuItem as="div" v-slot="{ active }"
+                                v-if="action === 'delete' && (item.canDelete === undefined || item.canDelete === true)"
+                                :key="index">
+                        <a
+                            @click.prevent="showDeleteModal(item)"
+                            href="javascript:void(0)"
+                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                          <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true"/>
+                          Delete
+                        </a>
+                      </MenuItem>
+                      <MenuItem as="div" v-slot="{ active }" v-if="item.custom_action_text"
+                                :key="index">
+                        <a
+                            @click.prevent="goTo(item.custom_action_link)"
+                            href="javascript:void(0)"
+                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                          <ArchiveIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                       aria-hidden="true"/>
+                          {{ item.custom_action_text }}
+                        </a>
+                      </MenuItem>
                       <slot name="actions" :item="item" :action="action" :index="index"></slot>
-                    </MenuItem>
+                    </template>
                   </div>
                 </MenuItems>
               </transition>
