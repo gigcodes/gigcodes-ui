@@ -6,11 +6,7 @@
     has-error="e"
     class="w-1/6"
   ></text-field>
-  <assets-field
-    v-model:data="items"
-    :config="{ container: 'main', max_files: 5, canEdit: true }"
-    name="Images"
-  ></assets-field>
+
   <dossier-table
     v-model:loading="loading"
     v-model:columns="columns"
@@ -20,6 +16,7 @@
     title="Categories"
     :search-term="searchTerm"
     collection="category"
+    :get-api="getApi"
   />
 
   <!--  <editor></editor> -->
@@ -35,15 +32,14 @@
 
 <script>
 import axios from "axios";
-import { provide, ref } from "vue";
-import { AssetsField, MediaSelector, Btn } from "../dist/gigcodes-admin.es";
+import { ref } from "vue";
+import { MediaSelector, Btn } from "../dist/gigcodes-admin.es";
 
 export default {
   name: "App",
   components: {
     MediaSelector,
     Btn,
-    AssetsField,
   },
   setup() {
     const loading = ref(true);
@@ -65,38 +61,9 @@ export default {
       console.log(asset);
     };
 
-    const uploadService = (data, config) =>
-      axios.post("http://127.0.0.1:8000/api/media/upload", data, config);
-    const getService = (params) =>
-      axios.get("http://127.0.0.1:8000/api/test", { params });
-    const getMediaService = (params) =>
-      axios.get("http://127.0.0.1:8000/api/media/get-file", { params });
-    const containerService = () =>
-      axios.get(`http://127.0.0.1:8000/api/media/browse`);
-    const loadFilesService = (params) =>
-      axios.get(`http://127.0.0.1:8000/api/media/get-files`, { params });
-    const deleteFilesService = (params) =>
-      axios.delete(`http://127.0.0.1:8000/api/media/delete`, { params });
-    const folderCreateService = (data) =>
-      axios.post(`http://127.0.0.1:8000/api/media/folder`, data);
-    const folderUpdateService = (uuid, data) =>
-      axios.patch(`http://127.0.0.1:8000/api/media/folder/${uuid}/edit`, data);
-    const deleteFolderService = (uuid) =>
-      axios.delete(`https://laravelmedia.loc/api/media/folder/${uuid}`);
+    const getApi = () => axios.get("http://localhost:8000/api/account-list");
+
     const items = ref([]);
-    provide("uploadService", uploadService);
-    provide("getService", getService);
-    provide("getMediaService", getMediaService);
-    provide("containerService", containerService);
-    provide("loadFilesService", loadFilesService);
-    provide("searchFilesService", "");
-    provide("moveFilesService", "");
-    provide("deleteFilesService", deleteFilesService);
-    provide("folderCreateService", folderCreateService);
-    provide("folderUpdateService", folderUpdateService);
-    provide("deleteFolderService", deleteFolderService);
-    provide("deleteMultiService", deleteFolderService);
-    provide("deleteService", deleteFilesService);
 
     return {
       items,
@@ -108,6 +75,7 @@ export default {
       tableOptions,
       showMedia,
       selected,
+      getApi,
     };
   },
 };

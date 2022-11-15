@@ -7,7 +7,11 @@
       :title="item.published ? 'Published' : 'Draft'"
     ></span>
     <a
-      v-if="column.link && !column.custom_link && (item.canEdit === undefined || item.canEdit === true)"
+      v-if="
+        column.link &&
+        !column.custom_link &&
+        (item.canEdit === undefined || item.canEdit === true)
+      "
       href="javascript:void(0)"
       class="has-status-icon"
       @click.prevent="goTo(item.edit_url)"

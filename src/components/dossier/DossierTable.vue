@@ -265,7 +265,7 @@ import Cookies from "js-cookie";
 import Pagination from "../pagination/Pagination.vue";
 import { Btn, createToaster, Events } from "../../index";
 import Modal from "../modal/Modal.vue";
-import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import {
   ChevronDownIcon,
@@ -295,6 +295,18 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  getApi: {
+    type: Function,
+    required: true,
+  },
+  deleteApi: {
+    type: Function,
+    required: true,
+  },
+  deleteMultiApi: {
+    type: Function,
+    required: true,
+  },
 });
 const emit = defineEmits([
   "update:loading",
@@ -306,10 +318,7 @@ const emit = defineEmits([
   "update:checked",
 ]);
 
-const getService = inject("getService");
-const deleteService = inject("deleteService");
 const showActionsDropdown = ref(false);
-const deleteMultiService = inject("deleteMultiService");
 const selectedPage = ref(
   Cookies.get(`gigcodes.table.${props.collection}.page`) ?? 1
 );
@@ -332,7 +341,8 @@ onUnmounted(() => {
 
 const deleteItem = async () => {
   try {
-    await deleteService(selectedItem.value.id)
+    await props
+      .deleteApi(selectedItem.value.id)
       .then((response) => {
         removeItemFromList(selectedItem.value.id);
         toast.show(response.data.message);
@@ -354,7 +364,8 @@ const showDeleteModal = (item) => {
 
 const deleteMultiple = async () => {
   try {
-    await deleteMultiService({ items: checkedItems.value })
+    await props
+      .deleteMultiApi({ items: checkedItems.value })
       .then((response) => {
         _.each(checkedItems.value, (id) => {
           removeItemFromList(id);
@@ -482,7 +493,7 @@ const getItems = () => {
   loading.value = true;
   emit("update:loading", true);
   try {
-    const results = getService(getParameters.value);
+    const results = props.getApi(getParameters.value);
     if (results) {
       results
         .then((response) => {
@@ -591,7 +602,7 @@ const performSearch = () => {
   loading.value = true;
   emit("update:loading", true);
   try {
-    const results = getService({ q: props.searchTerm });
+    const results = props.getApi({ q: props.searchTerm });
     if (results) {
       results
         .then((response) => {

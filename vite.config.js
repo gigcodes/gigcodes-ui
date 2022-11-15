@@ -1,5 +1,3 @@
-import eslintPlugin from "vite-plugin-eslint";
-
 const path = require("path");
 const { defineConfig } = require("vite");
 const vue = require("@vitejs/plugin-vue");
@@ -31,7 +29,7 @@ export default defineConfig({
       },
     },
   },
-  plugins: [vue(), eslintPlugin()],
+  plugins: [vue()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
